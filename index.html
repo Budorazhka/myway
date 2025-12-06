@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report: Partner Network Growth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- 1. CORE VARIABLES & RESET --- */
+        :root {
+            /* Palette: Deep Black + Cyan + Magenta */
+            --bg-dark: #050505;
+            --bg-glass: rgba(10, 10, 10, 0.7);
+            --primary: #22d3ee; /* Cyan */
+            --secondary: #e879f9; /* Magenta */
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, #000 90%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* --- 2. TYPOGRAPHY --- */
+        h1, h2, h3, .number {
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 40px rgba(34, 211, 238, 0.3);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        /* --- 3. LAYOUT & SECTIONS --- */
+        section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container { width: 100%; }
+
+        /* --- 4. ANIMATIONS & CARDS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(34, 211, 238, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(34, 211, 238, 0.1);
+        }
+
+        .img-wrapper {
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            position: relative;
+            background-color: #111; /* Fallback color */
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease;
+            filter: grayscale(100%) contrast(1.1);
+            display: block; /* Removes bottom space */
+        }
+        
+        /* If image is broken, show alt text nicely */
+        .img-wrapper img:not([src]) {
+             visibility: hidden;
+        }
+
+        .card:hover .img-wrapper img {
+            transform: scale(1.1);
+            filter: grayscale(0%) contrast(1);
+        }
+
+        /* Anti-Rating Specific Zoom */
+        .anti-card .img-wrapper {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 2px solid var(--border);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1; 
+        }
+
+        .anti-card:hover .img-wrapper {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .anti-card:hover .img-wrapper img {
+            transform: scale(1.35); /* Zoom Effect */
+            filter: grayscale(0%);
+        }
+
+        /* Pill Tag */
+        .pill {
+            background: linear-gradient(90deg, rgba(34, 211, 238, 0.1), rgba(232, 121, 249, 0.1));
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        /* --- 5. SPECIFIC ELEMENTS --- */
+        .hero { text-align: center; }
+        .hero-date {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--primary);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+            40% {transform: translateY(-10px) translateX(-50%);}
+            60% {transform: translateY(-5px) translateX(-50%);}
+        }
+
+        /* Grids */
+        .grid-team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            width: 100%;
+        }
+        .team-card img { height: 450px; }
+
+        .grid-anti {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+        .anti-card { text-align: center; background: rgba(5, 5, 5, 0.6); }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 50px;
+            margin-top: 80px;
+            width: 100%;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.05), transparent);
+        }
+        
+        .stat-val { 
+            font-size: 6rem; 
+            font-weight: 800; 
+            color: #fff;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+        .stat-label { 
+            font-size: 1.2rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            margin-top: 10px;
+            letter-spacing: 3px;
+        }
+        .stat-val.total { 
+            color: transparent;
+            -webkit-text-stroke: 2px var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Bars */
+        .bar-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .bar-label {
+            width: 200px;
+            text-align: right;
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .bar-bg {
+            flex-grow: 1;
+            background: rgba(255,255,255,0.05);
+            height: 44px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #06b6d4, var(--primary)); 
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 20px;
+            color: #000;
+            font-weight: 700;
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* New Rent Color: Magenta */
+        .bar-fill.rent {
+            background: linear-gradient(90deg, #d946ef, #e879f9); /* Magenta */
+            color: #000;
+        }
+
+        .comparison .bar-fill { 
+            background: #334155; 
+            color: #94a3b8;
+        }
+        .comparison .bar-fill.highlight { 
+            background: linear-gradient(90deg, var(--primary), #fff); 
+            color: #000;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Split Section */
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Redesigned Footer */
+        .footer-hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center main content */
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .footer-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+        }
+        
+        .footer-bg img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.3; 
+            filter: grayscale(100%) contrast(1.1);
+        }
+
+        .footer-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 20%, #000 100%);
+            z-index: 1;
+        }
+
+        /* New Flex Container for Footer */
+        .footer-inner {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-content {
+            max-width: 700px;
+        }
+
+        /* The End Image Styles */
+        .footer-end-visual {
+            transform: rotate(3deg);
+            transition: transform 0.3s ease;
+        }
+        
+        .footer-end-visual:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        .footer-end-visual img {
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(34, 211, 238, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-quote {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+        
+        .footer-quote span {
+            color: var(--primary);
+        }
+
+        .next-step-box {
+            border-left: 4px solid var(--secondary);
+            padding-left: 30px;
+        }
+
+        .next-step-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .next-step-text {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            h1 { font-size: 3rem; }
+            .split-section { grid-template-columns: 1fr; }
+            .stats-row { flex-direction: column; gap: 20px; }
+            .bar-label { text-align: left; width: 100%; }
+            .bar-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .bar-bg { width: 100%; }
+            
+            /* Footer Stack on Mobile */
+            .footer-inner { flex-direction: column; text-align: center; justify-content: center; gap: 40px;}
+            .footer-content { padding: 0; }
+            .next-step-box { border-left: none; border-top: 4px solid var(--secondary); padding-left: 0; padding-top: 20px; }
+            .footer-end-visual img { max-width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1: HERO -->
+    <section class="hero">
+        <div class="reveal active">
+            <span class="hero-date">Август – Сегодняшний день</span>
+            <h1 style="margin-top: 20px;">Отчет о развитии<br><span class="gradient-text">Партнерской Сети</span></h1>
+            <p style="max-width: 600px; margin: 30px auto; color: var(--text-muted);">
+                Риэлторы. Платформа. Прибавочная стоимость.
+            </p>
+        </div>
+        <div class="scroll-down" onclick="window.scrollTo(0, window.innerHeight)">
+            <i class="fa-solid fa-angles-down"></i>
+        </div>
+    </section>
+
+    <!-- SECTION 2: TEAM -->
+    <section>
+        <h2 class="reveal">Причастные</h2>
+        <div class="grid-team container">
+            <!-- Lana -->
+            <div class="card team-card reveal">
+                <div class="img-wrapper">
+                    <img src="Lana.jpg" alt="Lana">
+                </div>
+                <span class="pill">Привлечение</span>
+                <h3>Лана</h3>
+                <p style="margin-top: 10px;">Привлекает партнеров и публикует объекты.</p>
+            </div>
+            <!-- Daria -->
+            <div class="card team-card reveal" style="transition-delay: 0.1s;">
+                <div class="img-wrapper">
+                    <img src="Daria.jpg" alt="Daria">
+                </div>
+                <span class="pill">Публикация</span>
+                <h3>Дарья</h3>
+                <p style="margin-top: 10px;">Отвечает за наполнение платформы контентом.</p>
+            </div>
+            <!-- Sashko -->
+            <div class="card team-card reveal" style="transition-delay: 0.2s;">
+                <div class="img-wrapper">
+                    <img src="Sashko.jpg" alt="Sashko">
+                </div>
+                <span class="pill" style="background: rgba(244, 114, 182, 0.1); color: #f472b6; border-color: #f472b6;">Капиталист</span>
+                <h3>Сашко Неверующий</h3>
+                <p style="margin-top: 10px;">Ворует прибавочную стоимость.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: ANTI-RATING & STATS -->
+    <section>
+        <h2 class="reveal">Кого мы не считаем партнерами</h2>
+        <div class="grid-anti container reveal">
+            <div class="card anti-card">
+                <div class="img-wrapper">
+                    <img src="Waiter.jpg" alt="Waiter">
+                </div>
+                <h3>Ждуны</h3>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">"Подожду запуска"</p>
+            </div>
+            <div class="card anti-card">
+                <div class="img-wrapper">
+                    <img src="Forgetful.jpg" alt="Forgetful">
+                </div>
+                <h3>Забывашки</h3>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">"Я сейчас пришлю..."</p>
+            </div>
+            <div class="card anti-card">
+                <div class="img-wrapper">
+                    <img src="Overseer.jpg" alt="Overseer">
+                </div>
+                <h3>Надсмотрщики</h3>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">"Я посмотрю..."</p>
+            </div>
+            <div class="card anti-card">
+                <div class="img-wrapper">
+                    <img src="Thinker.jpg" alt="Thinker">
+                </div>
+                <h3>Мыслители</h3>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">"Я подумаю"</p>
+            </div>
+        </div>
+
+        <div class="stats-row reveal">
+            <div class="stat-item">
+                <div class="stat-label">Батуми</div>
+                <div class="stat-val" data-target="55">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Тбилиси</div>
+                <div class="stat-val" data-target="15">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label" style="color:#fff;">Активные</div>
+                <div class="stat-val total" data-target="70">0</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: DATA VOLUME -->
+    <section>
+        <div class="split-section container">
+            <div class="text-content reveal">
+                <h2 class="gradient-text">Объем данных</h2>
+                <div style="margin-top: 40px;">
+                    <!-- SALE BAR (Cyan) -->
+                    <div style="margin-bottom: 30px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="font-size: 1.5rem; color: #fff;">Продажа</span>
+                            <span style="font-size: 1.5rem; color: var(--primary);">2053</span>
+                        </div>
+                        <div class="bar-bg"><div class="bar-fill" style="width: 70%;"></div></div>
+                    </div>
+                    <!-- RENT BAR (Magenta) -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="font-size: 1.5rem; color: #fff;">Аренда</span>
+                            <span style="font-size: 1.5rem; color: var(--secondary);">893</span>
+                        </div>
+                        <div class="bar-bg"><div class="bar-fill rent" style="width: 30%;"></div></div>
+                    </div>
+                </div>
+                <p style="margin-top: 40px; font-size: 1.2rem;"><i class="fa-solid fa-database" style="color:var(--primary)"></i> Всего: 2946 объектов (до чистки)</p>
+            </div>
+            <div class="reveal" style="display: flex; justify-content: center;">
+                <div style="
+                    width: 350px; height: 350px; 
+                    border-radius: 50%; 
+                    background: conic-gradient(var(--primary) 0% 70%, var(--secondary) 70% 100%);
+                    box-shadow: 0 0 80px rgba(34, 211, 238, 0.2);
+                    position: relative;
+                ">
+                    <div style="
+                        position: absolute; inset: 10px; background: var(--bg-dark); border-radius: 50%;
+                        display: grid; place-items: center; font-size: 4rem; font-weight: 800; color: #fff;
+                        border: 1px solid var(--border);
+                    ">2946</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: COMPARISON -->
+    <section>
+        <h2 class="reveal">Сравнительная Эффективность</h2>
+        <div class="split-section container reveal">
+            <div class="bar-container comparison">
+                <div class="bar-row">
+                    <div class="bar-label" style="color: var(--primary);">Мы (Сейчас)</div>
+                    <div class="bar-bg">
+                        <div class="bar-fill highlight" data-width="90%">2946</div>
+                    </div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Этажи (9 мес)</div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" data-width="33%">969</div>
+                    </div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 40px;">
+                    <p>Мы сделали это быстрее, чем многие делают с большим штатом.</p>
+                    <div style="margin-top: 20px; border-left: 2px solid var(--border); padding-left: 20px;">
+                        <p style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 0;">
+                            Я поднял цифры. В Этажах за 9 месяцев у нас было 969 объектов. В городе 700 тысяч человек. С штатом больше 20 риэлторов.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 0; border: none; overflow: hidden; transform: rotate(2deg);">
+                <div class="img-wrapper" style="margin: 0; height: 100%; min-height: 400px;">
+                    <img src="sleep.jpg" alt="Sleep" style="height: 100%;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: ZERO TO HERO -->
+    <section class="split-section container reveal">
+        <div class="card" style="padding: 0; border: none; overflow: hidden; height: 600px; transform: rotate(-2deg);">
+             <div class="img-wrapper" style="margin: 0; height: 100%;">
+                <img src="Network.jpg" alt="Network">
+             </div>
+        </div>
+        <div class="text-content">
+            <h2 class="gradient-text" style="font-size: 4rem;">Zero to Hero</h2>
+            <p>Нулевой бренд и отсутствие доверия рынка — частично преодолено. Про нас говорят, про нас знают.</p>
+            <div class="quote-block" style="border-color: #fff; background: rgba(255,255,255,0.05);">
+                "О, я вас знаю, вы мне звонили" — стало привычной фразой.
+            </div>
+            <p>Массив объектов стал жизненной основой платформы. И вы можете не краснеть за количество объектов на презентациях.</p>
+        </div>
+    </section>
+
+    <!-- SECTION 7: SOLUTIONS -->
+    <section>
+        <h2 class="reveal">Проблемы и Решения</h2>
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%;">
+            <div class="card reveal">
+                <i class="fa-solid fa-file-contract" style="font-size: 2.5rem; color: var(--secondary); margin-bottom: 25px;"></i>
+                <h3 style="margin-bottom: 10px;">Проблема</h3>
+                <p style="margin-bottom: 20px; font-size: 1rem;">Устные договоренности о процентах не зафиксированы.</p>
+                <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+                    <h4 style="color: var(--primary);">Решение: Единая комиссия</h4>
+                    <p style="font-size: 1rem;">Вводим прозрачный фикс для всех.</p>
+                </div>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                 <i class="fa-solid fa-rotate" style="font-size: 2.5rem; color: var(--secondary); margin-bottom: 25px;"></i>
+                <h3 style="margin-bottom: 10px;">Проблема</h3>
+                <p style="margin-bottom: 20px; font-size: 1rem;">Актуализация объектов страдает.</p>
+                <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+                    <h4 style="color: var(--primary);">Решение: Умная система</h4>
+                    <p style="font-size: 1rem;">Автоматизация процесса.</p>
+                </div>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                 <i class="fa-solid fa-city" style="font-size: 2.5rem; color: var(--secondary); margin-bottom: 25px;"></i>
+                <h3 style="margin-bottom: 10px;">Проблема</h3>
+                <p style="margin-bottom: 20px; font-size: 1rem;">Сложный рынок Тбилиси.</p>
+                <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+                    <h4 style="color: var(--primary);">Решение: Агентская стратегия</h4>
+                    <p style="font-size: 1rem;">Готовим оффер специально под агентства.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: LEADERS CHART -->
+    <section>
+        <h2 class="reveal">Лидеры по объектам</h2>
+        <div class="container reveal">
+            <div class="bar-container">
+                <div class="bar-row"><div class="bar-label">Артур Шмидт</div><div class="bar-bg"><div class="bar-fill" data-width="100%">330</div></div></div>
+                <div class="bar-row"><div class="bar-label">Игорь Фреска</div><div class="bar-bg"><div class="bar-fill" data-width="88%">293</div></div></div>
+                <div class="bar-row"><div class="bar-label">Наталья Родина</div><div class="bar-bg"><div class="bar-fill" data-width="48%">161</div></div></div>
+                <div class="bar-row"><div class="bar-label">Регина</div><div class="bar-bg"><div class="bar-fill" data-width="43%">145</div></div></div>
+                <div class="bar-row"><div class="bar-label">Ольга Нижарадзе</div><div class="bar-bg"><div class="bar-fill" data-width="32%">107</div></div></div>
+                <div class="bar-row"><div class="bar-label">Андрей Сагрейдин</div><div class="bar-bg"><div class="bar-fill" data-width="27%">92</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: FOOTER (LOCAL FILE LINK + EXTRA IMAGE) -->
+    <div class="footer-hero">
+        <div class="footer-bg">
+            <img src="Final.jpg" alt="Final Background">
+        </div>
+        <div class="footer-overlay"></div>
+        
+        <div class="footer-inner">
+            <div class="footer-content">
+                <p style="text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 20px;">Финальный вывод</p>
+                <h2 class="footer-quote">
+                    "Мне за эту работу не стыдно.<br> 
+                    И за моих людей <span>мне не стыдно</span>.<br>
+                    Больше мне сказать нечего."
+                </h2>
+                <div class="next-step-box">
+                    <div class="next-step-label">Следующий шаг</div>
+                    <div class="next-step-text">Масштабирование с уже набитыми шишками.</div>
+                </div>
+            </div>
+            <!-- NEW VISUAL ELEMENT FOR "THE END" -->
+            <div class="footer-end-visual">
+                <img src="TheEnd.jpg" alt="ВСЕ!">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. REVEAL ON SCROLL
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // 2. ANIMATE BARS & NUMBERS
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bar-fill');
+                    bars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        if (width) bar.style.width = width;
+                    });
+                    const counters = entry.target.querySelectorAll('.stat-val');
+                    counters.forEach(counter => {
+                        const target = +counter.getAttribute('data-target');
+                        if(target > 0) {
+                            const speed = 100; 
+                            const updateCount = () => {
+                                const count = +counter.innerText;
+                                const inc = target / speed * 5; 
+                                if (count < target) {
+                                    counter.innerText = Math.ceil(count + inc);
+                                    setTimeout(updateCount, 20);
+                                } else {
+                                    counter.innerText = target;
+                                }
+                            };
+                            updateCount();
+                        }
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
